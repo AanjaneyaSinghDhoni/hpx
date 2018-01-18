@@ -96,16 +96,14 @@ namespace hpx { namespace actions
               , f_(std::move(other.f_))
             {}
 
-            HPX_FORCEINLINE threads::thread_result_type
-            operator()(threads::thread_state_ex_enum)
+            HPX_FORCEINLINE void
+            operator()()
             {
                 LTM_(debug)
                     << "Executing " << Action::get_action_name(lva_)
                     << " with continuation(" << cont_.get_id() << ")";
 
                 actions::trigger(std::move(cont_), f_);
-                return threads::thread_result_type(threads::terminated,
-                    threads::invalid_thread_id);
             }
 
         private:
@@ -237,7 +235,7 @@ namespace hpx { namespace actions
             {}
 
             template <typename ...Ts>
-            HPX_FORCEINLINE threads::thread_result_type
+            HPX_FORCEINLINE void
             operator()(naming::address::address_type lva,
                 naming::address::component_type comptype, Ts&&... vs) const
             {
@@ -272,8 +270,6 @@ namespace hpx { namespace actions
                 // OS-thread. This will throw if there are still any locks
                 // held.
                 util::force_error_on_lock();
-                return threads::thread_result_type(threads::terminated,
-                    threads::invalid_thread_id);
             }
 
             // This holds the target alive, if necessary.

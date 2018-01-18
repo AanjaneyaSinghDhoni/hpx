@@ -104,7 +104,7 @@ namespace hpx
             id_ = threads::invalid_thread_id;
         }
         void start_thread(util::unique_function_nonser<void()>&& func);
-        static threads::thread_result_type thread_function_nullary(
+        static void thread_function_nullary(
             util::unique_function_nonser<void()> const& func);
 
         mutable mutex_type mtx_;

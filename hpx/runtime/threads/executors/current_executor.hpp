@@ -76,8 +76,7 @@ namespace hpx { namespace threads { namespace executors
             }
 
         protected:
-            static threads::thread_result_type thread_function_nullary(
-                closure_type func);
+            static void thread_function_nullary(closure_type func);
 
             // Return the requested policy element
             std::size_t get_policy_element(

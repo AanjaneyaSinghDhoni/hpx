@@ -89,8 +89,7 @@ namespace hpx { namespace threads { namespace executors
             std::size_t get_policy_element(
                 threads::detail::executor_parameter p, error_code& ec) const;
 
-            static threads::thread_result_type thread_function_nullary(
-                closure_type func);
+            static void thread_function_nullary(closure_type func);
 
         private:
             // the scheduler used by this executor

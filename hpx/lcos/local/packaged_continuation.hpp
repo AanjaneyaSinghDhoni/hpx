@@ -271,7 +271,7 @@ namespace hpx { namespace lcos { namespace detail
         }
 
     protected:
-        threads::thread_result_type
+        void
         async_impl(
             typename traits::detail::shared_state_ptr_for<
                 Future
@@ -281,11 +281,9 @@ namespace hpx { namespace lcos { namespace detail
 
             Future future = traits::future_access<Future>::create(std::move(f));
             invoke_continuation(f_, std::move(future), *this);
-            return threads::thread_result_type(threads::terminated,
-                    threads::invalid_thread_id);
         }
 
-        threads::thread_result_type
+        void
         async_exec_impl(
             typename traits::detail::shared_state_ptr_for<
                 Future
@@ -299,8 +297,6 @@ namespace hpx { namespace lcos { namespace detail
 
             Future future = traits::future_access<Future>::create(std::move(f));
             invoke_continuation(f_, std::move(future), *this, is_void());
-            return threads::thread_result_type(threads::terminated,
-                threads::invalid_thread_id);
         }
 
     public:
@@ -324,7 +320,7 @@ namespace hpx { namespace lcos { namespace detail
             }
 
             boost::intrusive_ptr<continuation> this_(this);
-            threads::thread_result_type (continuation::*async_impl_ptr)(
+            void (continuation::*async_impl_ptr)(
                 typename traits::detail::shared_state_ptr_for<Future>::type &&
             ) = &continuation::async_impl;
 
@@ -371,7 +367,7 @@ namespace hpx { namespace lcos { namespace detail
             }
 
             boost::intrusive_ptr<continuation> this_(this);
-            threads::thread_result_type (continuation::*async_impl_ptr)(
+            void (continuation::*async_impl_ptr)(
                 typename traits::detail::shared_state_ptr_for<Future>::type &&
             ) = &continuation::async_impl;
 
@@ -414,7 +410,7 @@ namespace hpx { namespace lcos { namespace detail
             }
 
             boost::intrusive_ptr<continuation> this_(this);
-            threads::thread_result_type (continuation::*async_exec_impl_ptr)(
+            void (continuation::*async_exec_impl_ptr)(
                 typename traits::detail::shared_state_ptr_for<Future>::type &&
             ) = &continuation::async_exec_impl;
 

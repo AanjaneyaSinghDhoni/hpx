@@ -39,13 +39,10 @@ namespace hpx { namespace threads { namespace executors
             , priority_(priority)
             {}
 
-        threads::thread_result_type
-        pool_executor::thread_function_nullary(closure_type func)
+        void pool_executor::thread_function_nullary(closure_type func)
         {
             // execute the actual thread function
             func();
-            return threads::thread_result_type(threads::terminated,
-                threads::invalid_thread_id);
         }
 
         // Return the requested policy element

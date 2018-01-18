@@ -238,8 +238,7 @@ namespace hpx {
 
     int pre_main(hpx::runtime_mode);
 
-    threads::thread_result_type
-    runtime_impl::run_helper(
+    void runtime_impl::run_helper(
         util::function_nonser<runtime::hpx_main_function_type> func, int& result)
     {
         lbt_ << "(2nd stage) runtime_impl::run_helper: launching pre_main";
@@ -252,8 +251,7 @@ namespace hpx {
         if (result) {
             lbt_ << "runtime_impl::run_helper: bootstrap "
                     "aborted, bailing out";
-            return threads::thread_result_type(threads::terminated,
-                threads::invalid_thread_id);
+            return;
         }
 
         lbt_ << "(4th stage) runtime_impl::run_helper: bootstrap complete";
@@ -303,8 +301,6 @@ namespace hpx {
             // Call hpx_main
             result = func();
         }
-        return threads::thread_result_type(threads::terminated,
-            threads::invalid_thread_id);
     }
 
     int runtime_impl::start(

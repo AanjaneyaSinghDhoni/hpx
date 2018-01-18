@@ -8,6 +8,7 @@
 #include <hpx/runtime/applier/applier.hpp>
 #include <hpx/runtime/shutdown_function.hpp>
 #include <hpx/runtime/threads/thread_helpers.hpp>
+#include <hpx/runtime/threads/thread_data.hpp>
 #include <hpx/util/assert.hpp>
 #include <hpx/util/bind_front.hpp>
 #include <hpx/util/deferred_call.hpp>
@@ -76,7 +77,7 @@ namespace hpx { namespace util { namespace detail
 
             if (evaluate_) {
                 l.unlock();
-                evaluate(threads::wait_signaled);
+                evaluate();
             }
             else {
                 schedule_thread(l);
@@ -103,7 +104,7 @@ namespace hpx { namespace util { namespace detail
         // reschedule evaluation thread
         if (evaluate_) {
             l.unlock();
-            evaluate(threads::wait_signaled);
+            evaluate();
         }
         else {
             schedule_thread(l);
@@ -177,25 +178,26 @@ namespace hpx { namespace util { namespace detail
         microsecs_ = (std::max)((90 * microsecs_) / 100, min_interval);
     }
 
-    threads::thread_result_type interval_timer::evaluate(
-        threads::thread_state_ex_enum statex)
+    void interval_timer::evaluate()
     {
         try {
             std::unique_lock<mutex_type> l(mtx_);
 
+            auto self_id = threads::get_self_id();
+            threads::thread_state_ex_enum statex =
+                self_id ? self_id->get_state().state_ex() :
+                threads::wait_signaled;
             if (is_stopped_ || is_terminated_ ||
                 statex == threads::wait_abort || 0 == microsecs_)
             {
                 // object has been finalized, exit
-                return threads::thread_result_type(threads::terminated,
-                    threads::invalid_thread_id);
+                return;
             }
 
-            if (id_ != nullptr && id_ != threads::get_self_id())
+            if (id_ != nullptr && id_ != self_id)
             {
                 // obsolete timer thread
-                return threads::thread_result_type(threads::terminated,
-                    threads::invalid_thread_id);
+                return;
             }
 
             id_.reset();
@@ -224,8 +226,6 @@ namespace hpx { namespace util { namespace detail
         }
 
         // do not re-schedule this thread
-        return threads::thread_result_type(threads::terminated,
-            threads::invalid_thread_id);
     }
 
     // schedule a high priority task after a given time interval

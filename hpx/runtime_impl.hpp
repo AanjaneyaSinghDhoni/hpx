@@ -50,7 +50,7 @@ namespace hpx
         static void default_errorsink(std::string const&);
 
         //
-        threads::thread_result_type run_helper(
+        void run_helper(
             util::function_nonser<runtime::hpx_main_function_type> func,
             int& result);
 

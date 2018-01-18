@@ -106,7 +106,7 @@ namespace hpx { namespace threads { namespace executors { namespace detail
     }
 
     template <typename Scheduler>
-    threads::thread_result_type
+    void
     this_thread_executor<Scheduler>::thread_function_nullary(
         closure_type func)
     {
@@ -120,9 +120,6 @@ namespace hpx { namespace threads { namespace executors { namespace detail
         // OS-thread. This will throw if there are still any locks
         // held.
         util::force_error_on_lock();
-
-        return threads::thread_result_type(threads::terminated,
-            threads::invalid_thread_id);
     }
 
     // Schedule the specified function for execution in this executor.

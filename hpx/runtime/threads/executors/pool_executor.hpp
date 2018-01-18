@@ -73,8 +73,7 @@ namespace hpx { namespace threads { namespace executors
                 threads::detail::executor_parameter p,
                 error_code& ec) const;
 
-            static threads::thread_result_type thread_function_nullary(
-                closure_type func);
+            static void thread_function_nullary(closure_type func);
 
         private:
             typedef hpx::threads::detail::thread_pool_base pool_type;

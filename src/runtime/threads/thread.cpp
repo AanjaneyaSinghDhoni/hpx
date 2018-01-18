@@ -107,7 +107,7 @@ namespace hpx
         threads::run_thread_exit_callbacks(id);
     }
 
-    threads::thread_result_type thread::thread_function_nullary(
+    void thread::thread_function_nullary(
         util::unique_function_nonser<void()> const& func)
     {
         try {
@@ -136,9 +136,6 @@ namespace hpx
 
         // run all callbacks attached to the exit event for this thread
         run_thread_exit_callbacks();
-
-        return threads::thread_result_type(threads::terminated,
-            threads::invalid_thread_id);
     }
 
     thread::id thread::get_id() const noexcept

@@ -295,7 +295,7 @@ namespace hpx { namespace threads { namespace detail
         thread_id_type background_thread;
         background_running.reset(new bool(true));
         thread_init_data background_init(
-            [&, background_running](thread_state_ex_enum) -> thread_result_type
+            [&, background_running]()
             {
                 while(*background_running)
                 {
@@ -310,8 +310,6 @@ namespace hpx { namespace threads { namespace detail
                     hpx::this_thread::suspend(hpx::threads::pending,
                         "background_work");
                 }
-
-                return thread_result_type(terminated, invalid_thread_id);
             },
             hpx::util::thread_description("background_work"),
             0,
